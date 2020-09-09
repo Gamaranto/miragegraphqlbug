@@ -1,0 +1,26 @@
+type Dog {
+  id: ID!
+  name: String!
+  race: String!
+  vaccinated: Boolean!
+}
+
+type Cat {
+  id: ID!
+  name: String!
+  race: String!
+  weight: Int!
+}
+union Animal = Dog | Cat
+
+type SearchResult {
+  item: Animal!
+  rank: Int!
+}
+
+type Query {
+  dogs: [Dog!]
+  cats: [Cat!]
+  animals: [Animal]!
+  search(query_str: String!): [SearchResult!]!
+}
