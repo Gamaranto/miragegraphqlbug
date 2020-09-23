@@ -13,22 +13,20 @@ createServer({
     const graphqlHandler = createGraphQLHandler(graphQLSchema, this.schema, {
       resolvers: {
         Query: {
-          search(
-            obj: unknown,
-            { query_str }: { query_str: string },
-            context: unknown,
-            info: unknown
-          ) {
-            const items = [...mockDogs, ...mockCats];
+          search() {
+            const dogs = mockDogs.map((d) => ({ ...d, __typename: "Dog" }));
+            const cats = mockCats.map((d) => ({ ...d, __typename: "Cat" }));
+            const items = [...dogs, ...cats];
 
             let rankCount = 0;
-            const matchQueryStr = (str: string) =>
-              str.includes(query_str) || query_str.includes(str);
-
-            return items.reduce((acc, item) => {
-              const isMatch = matchQueryStr(item.name);
-              return isMatch ? [...acc, { item, rank: rankCount++ }] : acc;
+            const resolverReturn = items.reduce((acc, item) => {
+              return [
+                ...acc,
+                { __typename: "SearchResult", item, rank: rankCount++ },
+              ];
             }, [] as any);
+            console.log({ resolverReturn });
+            return resolverReturn;
           },
         },
       },
