@@ -22,5 +22,5 @@ type Query {
   dogs: [Dog!]
   cats: [Cat!]
   animals: [Animal]!
-  search: [SearchResult!]!
+  search(query_str: String!): [SearchResult!]!
 }
