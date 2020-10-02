@@ -13,10 +13,11 @@ createServer({
     const graphqlHandler = createGraphQLHandler(graphQLSchema, this.schema, {
       resolvers: {
         Query: {
-          search() {
-            const dogs = mockDogs.map((d) => ({ ...d, __typename: "Dog" }));
-            const cats = mockCats.map((d) => ({ ...d, __typename: "Cat" }));
-            const items = [...dogs, ...cats];
+          search(_obj: any, _args: any, { mirageSchema: { cats, dogs } }: any) {
+            const items = [
+              ...dogs.all().models,
+              ...cats.all().models
+            ];
 
             let rankCount = 0;
             const resolverReturn = items.reduce((acc, item) => {
